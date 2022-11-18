@@ -1,0 +1,127 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://Player/Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Opponent/Opponent.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Textures/ping_pong_8bit_plop.ogg" type="AudioStream" id=3]
+[ext_resource path="res://Ball/Ball.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Level/Level.gd" type="Script" id=5]
+[ext_resource path="res://Textures/PoetsenOne-Regular.ttf" type="DynamicFontData" id=6]
+
+[sub_resource type="DynamicFont" id=4]
+size = 25
+outline_size = 2
+outline_color = Color( 0.988235, 0, 1, 1 )
+use_filter = true
+font_data = ExtResource( 6 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 25
+outline_size = 2
+outline_color = Color( 0.945098, 1, 0, 1 )
+use_filter = true
+font_data = ExtResource( 6 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 25
+outline_size = 3
+outline_color = Color( 0.0823529, 0.568627, 0.0901961, 1 )
+font_data = ExtResource( 6 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 520.5, 10 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 512.5, 7.5 )
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 16, 305 )
+
+[node name="Level" type="Node"]
+script = ExtResource( 5 )
+
+[node name="background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.0392157, 0.168627, 0.14902, 1 )
+
+[node name="PlayerScore" type="Label" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -200.0
+custom_colors/font_color = Color( 0.0392157, 0.168627, 0.14902, 1 )
+custom_fonts/font = SubResource( 4 )
+text = "TEST
+"
+align = 1
+uppercase = true
+
+[node name="OpponentScore" type="Label" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 200.0
+custom_colors/font_color = Color( 0.0392157, 0.168627, 0.14902, 1 )
+custom_fonts/font = SubResource( 5 )
+text = "TEST
+"
+align = 1
+uppercase = true
+
+[node name="CountdownLabel" type="Label" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -200.0
+custom_colors/font_color = Color( 0.0392157, 0.168627, 0.14902, 1 )
+custom_fonts/font = SubResource( 6 )
+text = "countdown"
+align = 1
+valign = 1
+
+[node name="Player" parent="." instance=ExtResource( 1 )]
+position = Vector2( 53, 300 )
+
+[node name="TopWall" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TopWall"]
+position = Vector2( 509.5, -10 )
+shape = SubResource( 2 )
+
+[node name="BottomWall" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BottomWall"]
+position = Vector2( 502.5, 607 )
+shape = SubResource( 3 )
+
+[node name="Opponent" parent="." instance=ExtResource( 2 )]
+position = Vector2( 949, 300 )
+
+[node name="Ball" parent="." instance=ExtResource( 4 )]
+position = Vector2( 504, 300 )
+
+[node name="RedWall" type="Area2D" parent="."]
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="RedWall" type="CollisionShape2D" parent="RedWall"]
+position = Vector2( -16, 295 )
+shape = SubResource( 1 )
+
+[node name="BlueWall" type="Area2D" parent="."]
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="BlueWall" type="CollisionShape2D" parent="BlueWall"]
+position = Vector2( 1017, 295 )
+shape = SubResource( 1 )
+
+[node name="CountdownTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="ScoreSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+
+[connection signal="body_entered" from="RedWall" to="." method="_on_RedWall_body_entered"]
+[connection signal="body_entered" from="BlueWall" to="." method="_on_BlueWall_body_entered"]
+[connection signal="timeout" from="CountdownTimer" to="." method="_on_CountdownTimer_timeout"]
